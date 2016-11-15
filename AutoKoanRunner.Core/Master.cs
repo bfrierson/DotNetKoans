@@ -60,14 +60,16 @@ namespace AutoKoanRunner.Core
 			}
 			return result;
 		}
-		public static string WhatToMeditateOn(string[] lines)
+		public static string WhatToMeditateOn(string failedKoan, string[] lines)
 		{
-			return Array.Find(lines, l => l.TrimStart().StartsWith("at"))
-                .TrimStart()
-                .Replace(" in ", "\r\n        in ")
-                .Replace(Environment.CurrentDirectory, ".");
+		    var line = Array.Find(lines, l => l.TrimStart().StartsWith("at"));
+            var fileLocation = line.Substring(line.IndexOf(" in ")+4).Replace(Environment.CurrentDirectory, ".");
+		    var failedKoanName = failedKoan.Substring(failedKoan.LastIndexOf(".") + 1);
+
+            return $"{fileLocation} in {failedKoanName}";
 		}
-        private static string FindKoan(string[] lines, string projectName, string action)
+
+	    private static string FindKoan(string[] lines, string projectName, string action)
 		{
 			int lastPassingOffset = Array.FindLastIndex(lines, l => l.Contains(action));
 			if (lastPassingOffset < 0)

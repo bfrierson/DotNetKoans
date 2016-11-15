@@ -44,9 +44,13 @@ namespace AutoKoanRunner
 				});
 
 				Console.WriteLine("When you save a Koan, the Master will again ponder your work.");
-				Console.WriteLine("Press a key to exit...");
 				Console.WriteLine();
-				Console.ReadKey();
+			    var key = Console.ReadKey(true);
+
+                while (key.KeyChar != 'q' && key.KeyChar != 'Q')
+                {
+                    key = Console.ReadKey(true);
+                }
 			}
 			finally
 			{
@@ -100,7 +104,7 @@ namespace AutoKoanRunner
 		{
 			if (File.Exists(koans.AssemblyPath))
 			{
-				Console.WriteLine("Checking Koans...");
+				//Console.WriteLine("Checking Koans...");
 				using (Process launch = new Process())
 				{
 					launch.StartInfo.FileName = koansRunner;
@@ -123,9 +127,11 @@ namespace AutoKoanRunner
 			PrintLastActions(_Prior);
 			PrintMastersComments(_Prior);
 			PrintAnswersYouSeek(lines, _Prior);
-			PrintFinalWords(_Prior);
+            PrintAZenLikeStatement(_Prior);
+            PrintFinalWords(_Prior);
 		}
-		private static void PrintLastActions(Analysis analysis)
+
+        private static void PrintLastActions(Analysis analysis)
 		{
 			if (string.IsNullOrEmpty(analysis.LastPassedKoan) == false)
 			{
@@ -149,7 +155,7 @@ namespace AutoKoanRunner
 		}
 		private static void PrintAnswersYouSeek(string[] lines, Analysis analysis)
 		{
-			if (string.IsNullOrEmpty(analysis.FailedKoan)== false)
+			if (!string.IsNullOrEmpty(analysis.FailedKoan))
 			{
 				Console.WriteLine();
 				Console.WriteLine("The answers you seek...");
@@ -160,17 +166,58 @@ namespace AutoKoanRunner
 				Console.WriteLine();
 				Console.WriteLine("Please meditate on the following code:");
 				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("\t{0}", Master.WhatToMeditateOn(lines));
+				Console.WriteLine("\t{0}", Master.WhatToMeditateOn(analysis.FailedKoan, lines));
 				Console.ForegroundColor = ConsoleColor.White;
 			}
 		}
-		private static void PrintFinalWords(Analysis analysis)
+
+        private static void PrintAZenLikeStatement(Analysis analysis)
+        {
+            var zenMessage = "Mountains are again merely mountains";
+
+            if (!string.IsNullOrEmpty(analysis.FailedKoan))
+            {
+                switch (analysis.CompletedKoans % 10)
+                {
+                    case 0:
+                        zenMessage = "mountains are merely mountains";
+                        break;
+                    case 1:
+                    case 2:
+                        zenMessage = "learn the rules so you know how to break them properly";
+                        break;
+                    case 3:
+                    case 4:
+                        zenMessage = "remember that silence is sometimes the best answer";
+                        break;
+                    case 5:
+                    case 6:
+                        zenMessage = "sleep is the best meditation";
+                        break;
+                    case 7:
+                    case 8:
+                        zenMessage = "when you lose, don't lose the lesson";
+                        break;
+                    default:
+                        zenMessage = "things are not what they appear to be: nor are they otherwise";
+                        break;
+                }
+            }
+
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(zenMessage);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        private static void PrintFinalWords(Analysis analysis)
 		{
 			Console.WriteLine();
-			Console.WriteLine("sleep is the best meditation");
 			Console.WriteLine("your path thus far [{0}] {1}/{2}", analysis.ProgressBar, analysis.CompletedKoans, analysis.TotalKoans);
+            Console.WriteLine("Press 'q' to quit your journey...");
         }
-		private static void PrintTestLineJustTest(string koan, ConsoleColor accent, string action)
+
+        private static void PrintTestLineJustTest(string koan, ConsoleColor accent, string action)
 		{
 			Console.ForegroundColor = accent;
 			Console.Write(koan);
