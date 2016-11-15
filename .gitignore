@@ -1,3 +1,5 @@
 *.suo
 **/bin/**/*
 **/obj/**/*
+!AutoKoanRunner/bin/Debug/
+!AutoKoanRunner/bin/Debug/*
