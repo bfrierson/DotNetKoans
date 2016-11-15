@@ -1,33 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Diagnostics;
-using System.Text;
 using AutoKoanRunner.Core;
 
 namespace AutoKoanRunner
 {
 	class Program
 	{
-		private static readonly string koansRunner = @"..\..\..\KoanRunner\bin\debug\koanrunner.exe";
+		private static readonly string koansRunner = @"KoanRunner\bin\debug\koanrunner.exe";
 		private static DateTime _LastChange;
 		private static Analysis _Prior = new Analysis();
-		//private static string _PriorFailed;
-		//private static int _Attempts;
+
 		static void Main(string[] args)
 		{
-			if (Array.TrueForAll(KoanSource.Sources, source => Directory.Exists(source.SourceFolder)) == false)
+			if (!Array.TrueForAll(KoanSource.Sources, source => Directory.Exists(source.SourceFolder)))
 			{
-				Console.WriteLine("The Koans were not where we expected them to be.");
+				Console.WriteLine("The Koans are not where we expected them to be.");
+				Console.WriteLine("They are in '{0}' instead.", string.Join("' and '", KoanSource.Sources.Select(source => source.SourceFolder)));
 				return;
 			}
-			FileSystemWatcher[] watchers = Array.ConvertAll(
+			var watchers = Array.ConvertAll(
 				KoanSource.Sources,
 				source => new FileSystemWatcher(source.SourceFolder, "*" + source.Extension));
 			try
 			{
-				Array.ForEach(watchers, w =>
+                //initially build entire sln
+			    BuildProject(null);
+
+                Array.ForEach(watchers, w =>
 				{
                     w.Changed += StartRunner;
                     w.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime;
@@ -60,8 +61,6 @@ namespace AutoKoanRunner
 		{
 			_LastChange = DateTime.MinValue;
 			_Prior = new Analysis();
-			//_PriorFailed = String.Empty;
-			//_Attempts = 0;
 		}
 		private static void StartRunner(object sender, FileSystemEventArgs e)
 		{
@@ -73,22 +72,26 @@ namespace AutoKoanRunner
 				_LastChange = timestamp;
 			}
 			KoanSource source = Array.Find(KoanSource.Sources, s => e.FullPath.EndsWith(s.Extension));
-			BuildProject(source);
+			if (sender != null) BuildProject(source); // when runner first starts, build has already run
 			RunKoans(source);
 		}
 		private static bool BuildProject(KoanSource koans)
 		{
-			Console.WriteLine("Building...");
+		    var projectName = koans?.ProjectName;
+		    Console.WriteLine($"The master is pondering your {projectName ?? "path to enlightenment"}...");
+
 			using (Process build = new Process())
 			{
 				build.StartInfo.FileName = "devenv";
-				build.StartInfo.Arguments = String.Format(@"/build Debug /project {0} ..\..\..\DotNetKoans.sln", koans.ProjectName);
-				build.StartInfo.CreateNoWindow = true;
-				build.Start();
+			    build.StartInfo.Arguments = String.Format(@"DotNetKoans.sln /build Debug {0}",
+                    projectName != null ? "/project " + projectName : null);
+                build.StartInfo.CreateNoWindow = true;
+
+                build.Start();
 				build.WaitForExit();
-				if(build.ExitCode != 0)
+				if(build.ExitCode != 0 && koans != null)
 				{
-					Console.WriteLine("There was a build error.  Please check your code and try again.");
+				    Console.WriteLine($"There was a build error ({build.ExitCode}).  Please check your code and try again.");
 				}
 			}
 			return false;
@@ -166,7 +169,7 @@ namespace AutoKoanRunner
 			Console.WriteLine();
 			Console.WriteLine("sleep is the best meditation");
 			Console.WriteLine("your path thus far [{0}] {1}/{2}", analysis.ProgressBar, analysis.CompletedKoans, analysis.TotalKoans);
-		}
+        }
 		private static void PrintTestLineJustTest(string koan, ConsoleColor accent, string action)
 		{
 			Console.ForegroundColor = accent;

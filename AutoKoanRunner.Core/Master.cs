@@ -62,7 +62,10 @@ namespace AutoKoanRunner.Core
 		}
 		public static string WhatToMeditateOn(string[] lines)
 		{
-			return Array.Find(lines, l => l.TrimStart().StartsWith("at")).TrimStart();
+			return Array.Find(lines, l => l.TrimStart().StartsWith("at"))
+                .TrimStart()
+                .Replace(" in ", "\r\n        in ")
+                .Replace(Environment.CurrentDirectory, ".");
 		}
         private static string FindKoan(string[] lines, string projectName, string action)
 		{

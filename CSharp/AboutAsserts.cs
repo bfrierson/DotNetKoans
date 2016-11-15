@@ -6,21 +6,21 @@ namespace DotNetKoans.CSharp
     {
         //We shall contemplate truth by testing reality, via asserts.
         [Koan(1)]
-        public void AssertTruth() 
+        public void AssertTruth()
         {
-			Assert.True(false); //This should be true
+            Assert.True(false); //This should be true
         }
 
         //Enlightenment may be more easily achieved with appropriate messages
         [Koan(2)]
-        public void AssertTruthWithMessage() 
+        public void AssertTruthWithMessage()
         {
             Assert.True(false, "This should be true -- Please fix this");
         }
 
         //To understand reality, we must compare our expectations against reality
         [Koan(3)]
-        public void AssertEquality() 
+        public void AssertEquality()
         {
             var expectedValue = 3;
             var actualValue = 1 + 1;
@@ -29,7 +29,7 @@ namespace DotNetKoans.CSharp
 
         //Some wasy of asserting equality are better than others
         [Koan(4)]
-        public void ABetterWayOfAssertingEquality() 
+        public void ABetterWayOfAssertingEquality()
         {
             var expectedValue = 3;
             var actualValue = 1 + 1;
@@ -38,7 +38,7 @@ namespace DotNetKoans.CSharp
 
         //Sometimes we will ask you to fill in the values
         [Koan(5)]
-        public void FillInValues() 
+        public void FillInValues()
         {
             Assert.Equal(FILL_ME_IN, 1 + 1);
         }

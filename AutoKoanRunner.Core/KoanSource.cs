@@ -14,16 +14,16 @@ namespace AutoKoanRunner.Core
 		{
 			Extension = ".cs",
 			ProjectName = "CSharp",
-			SourceFolder = @"..\..\..\CSharp",
-			AssemblyPath = @"..\..\..\CSharp\bin\debug\csharp.dll"
-		};
+			SourceFolder = Environment.CurrentDirectory + @"\CSharp",
+			AssemblyPath = Environment.CurrentDirectory + @"\CSharp\bin\debug\csharp.dll"
+        };
 		public static readonly KoanSource VBasic = new KoanSource
 		{
 			Extension = ".vb",
 			ProjectName = "VBNet",
-			SourceFolder = @"..\..\..\VBNet",
-			AssemblyPath = @"..\..\..\VBNet\bin\debug\VBNet.dll"
-		};
+			SourceFolder = Environment.CurrentDirectory + @"\VBNet",
+			AssemblyPath = Environment.CurrentDirectory + @"\VBNet\bin\debug\VBNet.dll"
+        };
 		public static readonly KoanSource[] Sources = new[] { CSharp, VBasic };
 	}
 }
