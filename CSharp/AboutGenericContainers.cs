@@ -15,17 +15,17 @@ namespace DotNetKoans.CSharp
 			//The size of an array cannot be changed after you allocate it. To get around that
 			//you need a class from the System.Collections namespace such as ArrayList
 			ArrayList list = new ArrayList();
-			Assert.Equal(FILL_ME_IN, list.Count);
+			Assert.Equal(0, list.Count);
 
 			list.Add(42);
-			Assert.Equal(FILL_ME_IN, list.Count);
+			Assert.Equal(1, list.Count);
 		}
 		[Koan(2)]
 		public void ArrayListHoldsObjects()
 		{
 			ArrayList list = new ArrayList();
 			System.Reflection.MethodInfo method = list.GetType().GetMethod("Add");
-			Assert.Equal(typeof(FillMeIn), method.GetParameters()[0].ParameterType);
+			Assert.Equal(typeof(object), method.GetParameters()[0].ParameterType);
 		}
 		[Koan(3)]
 		public void MustCastWhenRetrieving()
@@ -35,7 +35,7 @@ namespace DotNetKoans.CSharp
 			ArrayList list = new ArrayList();
 			list.Add(42);
 			int x = 0;
-			//x = (int)list[0];
+			x = (int)list[0];
 			Assert.Equal(x, 42);
 		}
 		[Koan(4)]
@@ -46,8 +46,8 @@ namespace DotNetKoans.CSharp
 			ArrayList list = new ArrayList();
 			list.Add(42);
 			list.Add("fourty two");
-			Assert.Equal(FILL_ME_IN, list[0]);
-			Assert.Equal(FILL_ME_IN, list[1]);
+			Assert.Equal(42, list[0]);
+			Assert.Equal("fourty two", list[1]);
 
 			//While there are a few cases where it could be nice, instead what it means is that 
 			//anytime your code works with an array list you have to check that the element is 
@@ -78,10 +78,10 @@ namespace DotNetKoans.CSharp
 			//The "T" in the definition of List<T> is the type argument. You cannot declare an instace of List<T> without also
 			//supplying a type in place of T.
 			var list = new List<int>();
-			Assert.Equal(FILL_ME_IN, list.Count);
+			Assert.Equal(0, list.Count);
 
 			list.Add(42);
-			Assert.Equal(FILL_ME_IN, list.Count);
+			Assert.Equal(1, list.Count);
 
 			//Now just like int[], you can have a type safe dynamic sized container
 			//list.Add("fourty two"); //<--Unlike ArrayList this is illegal.
@@ -98,14 +98,14 @@ namespace DotNetKoans.CSharp
 			//Just as with Array, list will work with any type
 			List<Widget> list = new List<Widget>();
 			list.Add(new Widget());
-			Assert.Equal(FILL_ME_IN, list.Count);
+			Assert.Equal(1, list.Count);
 		}
 		[Koan(8)]
 		public void InitializingWithValues()
 		{
 			//Like array you can create a list with an initial set of values easily
 			var list = new List<int> { 1, 2, 3 };
-			Assert.Equal(FILL_ME_IN, list.Count);
+			Assert.Equal(3, list.Count);
 		}
 		[Koan(9)]
 		public void AddMultipleItems()
@@ -113,41 +113,41 @@ namespace DotNetKoans.CSharp
 			//You can add multiple items to a list at once
 			List<int> list = new List<int>();
 			list.AddRange(new[] { 1, 2, 3 });
-			Assert.Equal(FILL_ME_IN, list.Count);
+			Assert.Equal(3, list.Count);
 		}
 		[Koan(10)]
 		public void RandomAccess()
 		{
 			//Just as with array, you can use the subscript notation to access any element in a list.
 			List<int> list = new List<int> { 5, 6, 7 };
-			Assert.Equal(FILL_ME_IN, list[2]);
+			Assert.Equal(7, list[2]);
 		}
 		[Koan(11)]
 		public void BeyondTheLimits()
 		{
 			List<int> list = new List<int> { 1, 2, 3 };
 			//You cannot attempt to get data that doesn't exist
-			Assert.Throws(typeof(FillMeIn), delegate() { int x = list[3]; });
+			Assert.Throws(typeof(ArgumentOutOfRangeException), delegate() { int x = list[3]; });
 		}
 		[Koan(12)]
 		public void ConvertingToFixedSizeArray()
 		{
 			List<int> list = new List<int> { 1, 2, 3 };
-			Assert.Equal(FILL_ME_IN, list.ToArray());
+			Assert.Equal((new[] {1, 2, 3}), list.ToArray());
 		}
 		[Koan(13)]
 		public void InsertingInTheMiddle()
 		{
 			List<int> list = new List<int> { 1, 2, 3 };
 			list.Insert(1, 6);
-			Assert.Equal(FILL_ME_IN, list.ToArray());
+			Assert.Equal(new[] { 1, 6, 2, 3}, list.ToArray());
 		}
 		[Koan(14)]
 		public void RemovingItems()
 		{
 			List<int> list = new List<int> { 2, 1, 2, 3 };
 			list.Remove(2);
-			Assert.Equal(FILL_ME_IN, list.ToArray());
+			Assert.Equal(new[] { 1, 2, 3}, list.ToArray()); //tricky bitch
 		}
 
 		[Koan(15)]
@@ -156,25 +156,25 @@ namespace DotNetKoans.CSharp
 			var array = new[] { 1, 2 };
 			Stack stack = new Stack(array);
 			stack.Push("last");
-			Assert.Equal(FILL_ME_IN, stack.ToArray());
+			Assert.Equal(new object[] { "last", 2, 1}, stack.ToArray());
 			var poppedValue = stack.Pop();
-			Assert.Equal(FILL_ME_IN, poppedValue);
-			Assert.Equal(FILL_ME_IN, stack.ToArray());
+			Assert.Equal("last", poppedValue);
+			Assert.Equal(new object[] {2, 1}, stack.ToArray());
 		}
 
 		[Koan(16)]
 		public void GenericStackPushPop()
 		{
 			var stack = new Stack<int>();
-			Assert.Equal(FILL_ME_IN, stack.Count);
+			Assert.Equal(0, stack.Count);
 
 			stack.Push(42);
-			Assert.Equal(FILL_ME_IN, stack.Count);
+			Assert.Equal(1, stack.Count);
 
 			int x = stack.Pop();
-			Assert.Equal(FILL_ME_IN, x);
+			Assert.Equal(42, x);
 
-			Assert.Equal(FILL_ME_IN, stack.Count);
+			Assert.Equal(0, stack.Count);
 		}
 		[Koan(17)]
 		public void StackOrder()
@@ -184,16 +184,16 @@ namespace DotNetKoans.CSharp
 			stack.Push(2);
 			stack.Push(3);
 
-			Assert.Equal(FILL_ME_IN, stack.ToArray());
+			Assert.Equal(new[] { 3,2,1}, stack.ToArray());
 		}
 		[Koan(18)]
 		public void PeekingIntoAQueue()
 		{
 			Queue<string> queue = new Queue<string>();
 			queue.Enqueue("one");
-			Assert.Equal(FILL_ME_IN, queue.Peek());
+			Assert.Equal("one", queue.Peek());
 			queue.Enqueue("two");
-			Assert.Equal(FILL_ME_IN, queue.Peek());
+			Assert.Equal("one", queue.Peek());
 		}
 		[Koan(19)]
 		public void RemovingItemsFromTheQueue()
@@ -201,8 +201,8 @@ namespace DotNetKoans.CSharp
 			Queue<string> queue = new Queue<string>();
 			queue.Enqueue("one");
 			queue.Enqueue("two");
-			Assert.Equal(FILL_ME_IN, queue.Dequeue());
-			Assert.Equal(FILL_ME_IN, queue.Count);
+			Assert.Equal("one", queue.Dequeue());
+			Assert.Equal(1, queue.Count);
 		}
 		[Koan(20)]
 		public void Shifting()
@@ -215,25 +215,25 @@ namespace DotNetKoans.CSharp
 			var list = new LinkedList<string>(array);
 
 			list.AddFirst("Say");
-			Assert.Equal(FILL_ME_IN, list.ToArray());
+			Assert.Equal(new[] {"Say", "Hello", "World" }, list.ToArray());
 
 			list.RemoveLast();
-			Assert.Equal(FILL_ME_IN, list.ToArray());
+			Assert.Equal(new[] { "Say", "Hello"}, list.ToArray());
 
 			list.RemoveFirst();
-			Assert.Equal(FILL_ME_IN, list.ToArray());
+			Assert.Equal(new[] { "Hello"}, list.ToArray());
 
 			list.AddAfter(list.Find("Hello"), "World");
-			Assert.Equal(FILL_ME_IN, list.ToArray());
+			Assert.Equal(new[] { "Hello", "World"}, list.ToArray());
 		}
 		[Koan(21)]
 		public void AddingToADictionary()
 		{
 			//Dictionary<TKey, TValue> is .Net's key value store. The key and the value do not need to be the same types.
 			Dictionary<int, string> dictionary = new Dictionary<int, string>();
-			Assert.Equal(FILL_ME_IN, dictionary.Count);
+			Assert.Equal(0, dictionary.Count);
 			dictionary[1] = "one";
-			Assert.Equal(FILL_ME_IN, dictionary.Count);
+			Assert.Equal(1, dictionary.Count);
 		}
 		[Koan(22)]
 		public void AccessingData()
